@@ -1,0 +1,29 @@
+﻿#include "pch.h"
+#include "WidgetIPC.h"
+#include "WidgetIPC.g.cpp"
+
+using namespace winrt;
+using namespace Windows::UI::Xaml;
+
+namespace winrt::WidgetIPCSample::implementation
+{
+    WidgetIPC::WidgetIPC()
+    {
+        InitializeComponent();
+    }
+
+    int32_t WidgetIPC::MyProperty()
+    {
+        throw hresult_not_implemented();
+    }
+
+    void WidgetIPC::MyProperty(int32_t /* value */)
+    {
+        throw hresult_not_implemented();
+    }
+
+    void WidgetIPC::MyButton_Click(IInspectable const&, RoutedEventArgs const&)
+    {
+        myButton().Content(box_value(L"Clicked"));
+    }
+}

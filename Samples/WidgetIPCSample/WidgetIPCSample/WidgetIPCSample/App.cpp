@@ -2,6 +2,7 @@
 
 #include "App.h"
 #include "MainPage.h"
+#include "WidgetIPC.h"
 
 using namespace winrt;
 using namespace Windows::ApplicationModel;
@@ -33,6 +34,42 @@ App::App()
         }
     });
 #endif
+}
+
+void App::OnActivated(IActivatedEventArgs const& e)
+{
+    XboxGameBarUIExtensionActivatedEventArgs uiExtArgs{ nullptr };
+    if (e.Kind() == ActivationKind::Protocol)
+    {
+        auto protocolArgs = e.try_as<IProtocolActivatedEventArgs>();
+        if (protocolArgs)
+        {
+            const wchar_t* scheme = protocolArgs.Uri().SchemeName().c_str();
+            if (0 != wcsstr(scheme, L"ms-gamebaruiextension"))
+            {
+                uiExtArgs = e.try_as<XboxGameBarUIExtensionActivatedEventArgs>();
+            }
+        }
+    }
+    if (uiExtArgs)
+    {
+        // Create root frame and set it as the window content
+        auto rootFrame = Frame();
+        rootFrame.NavigationFailed({ this, &App::OnNavigationFailed });
+        Window::Current().Content(rootFrame);
+
+        // Create Game Bar extension object which bootstraps the connection with Game Bar
+        m_uiExtension1 = XboxGameBarUIExtension(
+            uiExtArgs,
+            Window::Current().CoreWindow(),
+            rootFrame);
+
+        // Navigate to our desired view: Extension1 page. 
+        rootFrame.Navigate(xaml_typename<WidgetIPCSample::WidgetIPC>());
+
+        // Activate our window
+        Window::Current().Activate();
+    }
 }
 
 /// <summary>

@@ -1,0 +1,9 @@
+namespace WidgetIPCSample
+{
+    [default_interface]
+    runtimeclass WidgetIPC : Windows.UI.Xaml.Controls.Page
+    {
+        WidgetIPC();
+        Int32 MyProperty;
+    }
+}

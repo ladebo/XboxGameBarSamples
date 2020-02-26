@@ -8,8 +8,13 @@ namespace winrt::WidgetIPCSample::implementation
     {
         App();
 
+        void OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs const& args);
         void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs const&);
         void OnSuspending(IInspectable const&, Windows::ApplicationModel::SuspendingEventArgs const&);
         void OnNavigationFailed(IInspectable const&, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs const&);
+
+    private:
+
+        Microsoft::Gaming::XboxGameBar::XboxGameBarUIExtension m_uiExtension1{ nullptr };
     };
 }
