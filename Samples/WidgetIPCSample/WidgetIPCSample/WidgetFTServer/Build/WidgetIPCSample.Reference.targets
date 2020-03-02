@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Project
+    ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+    InitialTargets="GameOverlayReferenceExpansionDebug"
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!--
+        GameOverlayProjectReference
+            Identity        project name
+            ProjectId       project guid
+            ProjectPath     path to the project file (optional)
+            IncludePath     path to the project include folder (optional)
+            LibPath         path to the project .lib file (optional)
+            Description     name shown by VS in the references (optional)
+            Dll             true if the project is a dll
+    -->
+
+    <ItemGroup>
+        <!-- Expand all references -->
+        <_ProjectReference Include="@(GameOverlayProjectReference)">
+            <Project>%(ProjectId)</Project>
+            <Name Condition="'%(Description)' != ''">%(Description)</Name>
+            <Name Condition="'%(Description)' == ''">%(Identity)</Name>
+
+            <ProjectName>%(Identity)</ProjectName>
+
+            <Dll>%(Dll)</Dll>
+
+            <ProjectPath Condition="'%(ProjectPath)' != ''">%(ProjectPath)</ProjectPath>
+            <ProjectPath Condition="'%(ProjectPath)' == ''">$(GbSourceDirectory)%(Identity)\%(Identity).vcxproj</ProjectPath>
+
+            <IncludePath Condition="'%(IncludePath)' != ''">%(IncludePath)</IncludePath>
+            <IncludePath Condition="'%(IncludePath)' == ''">$(GbSourceDirectory)%(Identity)\Inc</IncludePath>
+
+            <LibPath Condition="'%(LibPath)' != ''">%(LibPath)</LibPath>
+            <LibPath Condition="'%(LibPath)' == ''">$(ProjectIndependentOutDir)%(Identity)\%(Identity).lib</LibPath>
+            
+            <LayoutPath Condition="'%(LayoutPath)' != '' and '%(Dll)' == 'true'">%(LayoutPath)</LayoutPath>
+            <LayoutPath Condition="'%(LayoutPath)' == '' and '%(Dll)' == 'true'">$(LibPath)%(Identity)\</LayoutPath>
+
+            <CopyLocal>false</CopyLocal>
+            <CopyLocal Condition="'%(Dll)' == 'true'">true</CopyLocal>
+
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <ReferenceOutputAssembly Condition="'%(Dll)' == 'true'">true</ReferenceOutputAssembly>
+
+            <LinkLibraryDependencies>false</LinkLibraryDependencies>
+            <UseLibraryDependencyImports>false</UseLibraryDependencyImports>
+        </_ProjectReference>
+
+        <!-- Filter to only the references relevant to the current project type -->
+        <!--
+            We take all the dll dependencies, the static libs if the current
+            project is an executable and we skip the current project
+        -->
+        <_ProjectReferenceFiltered Include="@(_ProjectReference)">
+            <_IncludeThisItem>false</_IncludeThisItem>
+            <_IncludeThisItem Condition="('%(Dll)' == 'true' or '$(ConfigurationType)' != 'StaticLibrary') and ('%(ProjectName)' != '$(MSBuildProjectName)')">true</_IncludeThisItem>
+
+            <Project Condition="'%(_IncludeThisItem)' != 'true'"></Project>
+            <Name Condition="'%(_IncludeThisItem)' != 'true'"></Name>
+            <ProjectName Condition="'%(_IncludeThisItem)' != 'true'"></ProjectName>
+            <!--Dll Condition="'$(_IncludeThisItem)' != 'true'"></Dll-->
+            <ProjectPath Condition="'%(_IncludeThisItem)' != 'true'"></ProjectPath>
+            <!--IncludePath Condition="'$(_IncludeThisItem)' != 'true'"></IncludePath-->
+            <LibPath Condition="'%(_IncludeThisItem)' != 'true'"></LibPath>
+            <LayoutPath Condition="'%(_IncludeThisItem)' != 'true'"></LayoutPath>
+            <CopyLocal Condition="'%(_IncludeThisItem)' != 'true'"></CopyLocal>
+            <ReferenceOutputAssembly Condition="'%(_IncludeThisItem)' != 'true'"></ReferenceOutputAssembly>
+            <LinkLibraryDependencies Condition="'%(_IncludeThisItem)' != 'true'"></LinkLibraryDependencies>
+            <UseLibraryDependencyImports Condition="'%(_IncludeThisItem)' != 'true'"></UseLibraryDependencyImports>
+        </_ProjectReferenceFiltered>
+
+        <ProjectReference Include="@(_ProjectReferenceFiltered->'%(ProjectPath)')" />
+
+        <!-- Expand the layout -->
+        <LayoutSourceDirs Include="@(_ProjectReferenceFiltered->'%(LayoutPath)')" Condition="'$(ConfigurationType)'!='StaticLibrary'">
+            <ExclusionFilter>$(LayoutExtensionFilter)</ExclusionFilter>
+        </LayoutSourceDirs>
+
+        <!-- Generate the include path and library dependencies -->
+        <_AdditionalIncludeDirectories Include="@(_ProjectReferenceFiltered->'%(IncludePath)')" />
+        <_AdditionalDependencies Include="@(_ProjectReferenceFiltered->'%(LibPath)')" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <_AdditionalIncludeDirectoriesProp>@(_AdditionalIncludeDirectories)</_AdditionalIncludeDirectoriesProp>
+        <_AdditionalDependenciesProp>@(_AdditionalDependencies)</_AdditionalDependenciesProp>
+    </PropertyGroup>
+
+    <ItemDefinitionGroup>
+        <!-- Visual Studio can't handle this in the editor... -->
+        <!--ClCompile>
+            <AdditionalIncludeDirectories>$(_AdditionalIncludeDirectoriesProp);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        </ClCompile-->
+        <Link Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+            <AdditionalDependencies>$(_AdditionalDependenciesProp);%(AdditionalDependencies)</AdditionalDependencies>
+        </Link>
+    </ItemDefinitionGroup>
+
+    <Target Name="GameOverlayReferenceExpansionDebug">
+        <PropertyGroup>
+            <!-- Useful constants -->
+            <Dir>$([System.IO.Path]::DirectorySeparatorChar)</Dir>
+            <N>%0D%0A</N>
+            <T>%09</T>
+        </PropertyGroup>
+
+        <Message Importance="High" Text="GameOverlayReferenceExpansionDebug" />
+        <Message Importance="High" Text="  MSBuildProjectName = $(MSBuildProjectName)" />
+        <Message Importance="High" Text="  ConfigurationType = $(ConfigurationType)" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  GameOverlayProjectReference$(N)    Identity = '%(GameOverlayProjectReference.Identity)'$(N)    ProjectId = '%(GameOverlayProjectReference.ProjectId)'$(N)    ProjectPath = '%(GameOverlayProjectReference.ProjectPath)'$(N)    IncludePath = '%(GameOverlayProjectReference.IncludePath)'$(N)    LibPath = '%(GameOverlayProjectReference.LibPath)'$(N)    Description = '%(GameOverlayProjectReference.Description)'$(N)    Dll = '%(GameOverlayProjectReference.Dll)'" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  _ProjectReference$(N)    Identity = '%(_ProjectReference.Identity)'$(N)    Identity = '%(_ProjectReference.Identity)'$(N)    Project = '%(_ProjectReference.Project)'$(N)    Name = '%(_ProjectReference.Name)'$(N)    ProjectName = '%(_ProjectReference.ProjectName)'$(N)    Dll = '%(_ProjectReference.Dll)'$(N)    ProjectPath = '%(_ProjectReference.ProjectPath)'$(N)    IncludePath = '%(_ProjectReference.IncludePath)'$(N)    LibPath = '%(_ProjectReference.LibPath)'$(N)    LayoutPath = '%(_ProjectReference.LayoutPath)'$(N)    CopyLocal = '%(_ProjectReference.CopyLocal)'$(N)    ReferenceOutputAssembly = '%(_ProjectReference.ReferenceOutputAssembly)'$(N)    LinkLibraryDependencies = '%(_ProjectReference.LinkLibraryDependencies)'$(N)    UseLibraryDependencyImports = '%(_ProjectReference.UseLibraryDependencyImports)'" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  _ProjectReferenceFiltered$(N)    Identity = '%(_ProjectReferenceFiltered.Identity)'$(N)    _IncludeThisItem = '%(_ProjectReferenceFiltered._IncludeThisItem)'$(N)    Project = '%(_ProjectReferenceFiltered.Project)'$(N)    Name = '%(_ProjectReferenceFiltered.Name)'$(N)    ProjectName = '%(_ProjectReferenceFiltered.ProjectName)'$(N)    Dll = '%(_ProjectReferenceFiltered.Dll)'$(N)    ProjectPath = '%(_ProjectReferenceFiltered.ProjectPath)'$(N)    IncludePath = '%(_ProjectReferenceFiltered.IncludePath)'$(N)    LibPath = '%(_ProjectReferenceFiltered.LibPath)'$(N)    LayoutPath = '%(_ProjectReferenceFiltered.LayoutPath)'$(N)    CopyLocal = '%(_ProjectReferenceFiltered.CopyLocal)'$(N)    ReferenceOutputAssembly = '%(_ProjectReferenceFiltered.ReferenceOutputAssembly)'$(N)    LinkLibraryDependencies = '%(_ProjectReferenceFiltered.LinkLibraryDependencies)'$(N)    UseLibraryDependencyImports = '%(_ProjectReferenceFiltered.UseLibraryDependencyImports)'" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  _AdditionalIncludeDirectories" />
+        <Message Importance="High" Text="    %(_AdditionalIncludeDirectories.Identity)" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  _AdditionalDependencies" />
+        <Message Importance="High" Text="    %(_AdditionalDependencies.Identity)" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  ProjectReference$(N)    Identity = '%(ProjectReference.Identity)'$(N)    Project = '%(ProjectReference.Project)'$(N)    Name = '%(ProjectReference.Name)'$(N)    CopyLocal = '%(ProjectReference.CopyLocal)'$(N)    ReferenceOutputAssembly = '%(ProjectReference.ReferenceOutputAssembly)'$(N)    LinkLibraryDependencies = '%(ProjectReference.LinkLibraryDependencies)'$(N)    UseLibraryDependencyImports = '%(ProjectReference.UseLibraryDependencyImports)'" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  _AdditionalIncludeDirectoriesProp" />
+        <Message Importance="High" Text="    $(_AdditionalIncludeDirectoriesProp)" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  _AdditionalDependenciesProp" />
+        <Message Importance="High" Text="    $(_AdditionalDependenciesProp)" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  LayoutSourceDirs$(N)    Identity = '%(LayoutSourceDirs.Identity)'$(N)    ExclusionFilter = '%(LayoutSourceDirs.ExclusionFilter)'" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  ClCompile$(N)    Identity = '%(ClCompile.Identity)'$(N)    AdditionalIncludeDirectories = '%(ClCompile.AdditionalIncludeDirectories)'" />
+        <Message Importance="High" Text=" " />
+        <Message Importance="High" Text="  Link$(N)    Identity = '%(Link.Identity)'$(N)    AdditionalDependencies = '%(Link.AdditionalDependencies)'" />
+    </Target>
+</Project>

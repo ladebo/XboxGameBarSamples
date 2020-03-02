@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Label="BeforeMicrosoftCppProps">
+    <CppWinRTOptimized>true</CppWinRTOptimized>
+    <CppWinRTLibs>true</CppWinRTLibs>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  
+  <!-- Non-Release configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="BeforeMicrosoftCppProps">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <LinkIncremental>true</LinkIncremental>
+
+    <FeatureFlags>
+      FF_VideoEditing;
+      FF_VideoShareToTwitter;
+      FF_ModernGamertag;
+      FF_AnonymousLfg;
+      FF_MixerLaunchPip;
+      FF_MessagingWeblinks;
+      FF_ViewStreamingWeblinks;
+      FF_MessagingImages;
+      FF_Lfg;
+      FF_AudioCues;
+      FF_ForcedFileLogging;
+      FF_XCloudIntegration
+    </FeatureFlags>
+  </PropertyGroup>
+
+  <!-- Release configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="BeforeMicrosoftCppProps">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <LinkIncremental>false</LinkIncremental>
+    <!-- Add any FeatureFlags for release here -->
+    <!-- <FeatureFlags>
+            FF_VideoEditing;
+        </FeatureFlags> -->
+  </PropertyGroup>
+
+  <!-- Include this file where you would have included Microsoft.Cpp.Props -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <!-- LIB, COMPILE, LINK, AND RESOURCE -->
+  <ItemDefinitionGroup>
+    <Lib>
+      <!-- It seems like the librarian has different syntax for disabling warnings from the linker, so just adding these as command link additional options -->
+      <!-- Turn off: warning LNK4264: archiving object file compiled with /ZW into a static library; note that when authoring Windows Runtime types it is not recommended to link with a static library that contains Windows Runtime metadata.-->
+      <AdditionalOptions>/IGNORE:4264 %(AdditionalOptions)</AdditionalOptions>
+      <!-- This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library (W4221) -->
+      <!-- <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions> -->
+    </Lib>
+    
+    <!-- COMMON Compiler options -->
+    <ClCompile>
+      <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <!-- Turn conformance back on after removing all CX code -->
+      <!-- <ConformanceMode>true</ConformanceMode> -->
+
+      <!-- /await - enable coawait support -->
+      <!-- /bigobj - supports obj file sizes up to 2^32 -->
+      <AdditionalOptions>/await /bigobj /Qspectre %(AdditionalOptions)</AdditionalOptions>
+
+      <!--Temporarily disable cppwinrt heap enforcement to work around xaml compiler generated std::shared_ptr use -->
+      <AdditionalOptions Condition="'$(CppWinRTHeapEnforcement)'==''">/DWINRT_NO_MAKE_DETECTION %(AdditionalOptions)</AdditionalOptions>
+
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+
+      <!-- Disable warning C4345: behavior change: an object of POD type constructed with an initializer of the form () will be default-initialized -->
+      <!-- <DisableSpecificWarnings>4345;%(DisableSpecificWarnings)</DisableSpecificWarnings> -->
+
+      <!-- From the UWP project template -->
+      <!-- 4453: '%$S': A '[WebHostHidden]' type should not be used on the published surface of a public type that is not '[WebHostHidden]' -->
+      <!-- 28204: <function> : Only one of this overload and the one at <filename>(<line>) are annotated for <paramname>: both or neither must be annotated. -->
+      <!-- <DisableSpecificWarnings>4453;28204;%(DisableSpecificWarnings)</DisableSpecificWarnings> -->
+
+      <!-- collections.h is broken under c++latest if we don't restore the removed machinery -->
+      <PreprocessorDefinitions>WIN32;_HAS_AUTO_PTR_ETC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+
+      <!-- Feature flags are defined in GameBar.Cpp.Default.props and can be passed on command line -->
+      <PreprocessorDefinitions Condition="'$(FeatureFlags)'!=''">%(PreprocessorDefinitions);$(FeatureFlags)</PreprocessorDefinitions>
+      
+      <!-- WORKAROUND for compiler issue in VS toolset -->
+      <!-- https://developercommunity.visualstudio.com/content/problem/815760/cllink-regression-regarding-duplicate-symbols-ando.html -->
+      <!-- Pending fix: https://devdiv.visualstudio.com/DevDiv/_git/msvc/pullrequest/209643 -->
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_RESUMABLE_ENABLE_LEGACY_AWAIT_ADAPTERS</PreprocessorDefinitions>
+
+      <!-- Disable warning about use of std::result_of in C++17 -->
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING</PreprocessorDefinitions>
+      
+      <!-- Additional Includes -->
+      <!-- <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(GbSourceDirectory)GameBarCommon\Inc</AdditionalIncludeDirectories> -->
+      
+      <!-- Version information -->
+      <PreprocessorDefinitions>
+        %(PreprocessorDefinitions);
+        VERSION_MAJOR=$(VersionMajor);
+        VERSION_MINOR=$(VersionMinor);
+        VERSION_BUILD=$(VersionBuild);
+        VERSION_REVISION=$(VersionRevision);
+      </PreprocessorDefinitions>
+    </ClCompile>
+    
+    <!-- DEBUG Compiler options -->
+    <ClCompile Condition="'$(Configuration)' == 'Debug'">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    
+    <!-- RELEASE Compiler options -->
+    <ClCompile Condition="'$(Configuration)' == 'Release'">
+      <Optimization>MaxSpeed</Optimization>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    
+    <!-- PREFAST Compiler options -->
+    <ClCompile Condition="'$(Configuration)' == 'Prefast'">
+      <!-- If prefast is enabled, add the flags prefast/analyze needs -->
+      <AdditionalOptions>/analyze /analyze:stacksize32767 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    
+
+    <!-- COMMON Linker options -->
+    <Link>
+      <AdditionalOptions>/DYNAMICBASE %(AdditionalOptions)</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+
+    <!-- DEBUG Linker options -->
+    <Link Condition="'$(Configuration)' == 'Debug'">
+    </Link>
+
+    <!-- RELEASE Linker options -->
+    <Link Condition="'$(Configuration)' == 'Release'">
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalOptions>/GUARD:CF %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+
+    <!-- PREFAST Linker options -->
+    <Link Condition="'$(Configuration)' == 'Prefast'">
+      <DetectOneDefinitionRule>true</DetectOneDefinitionRule>
+    </Link>
+
+    <!-- <!-- COMMON Resource --> -->
+    <!-- <ResourceCompile> -->
+      <!-- <AdditionalIncludeDirectories>$(GbSourceDirectory)GameBarCommon\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories> -->
+
+      <!-- <!-- Version information --> -->
+      <!-- <PreprocessorDefinitions> -->
+        <!-- %(PreprocessorDefinitions); -->
+        <!-- VERSION_MAJOR=$(VersionMajor); -->
+        <!-- VERSION_MINOR=$(VersionMinor); -->
+        <!-- VERSION_BUILD=$(VersionBuild); -->
+        <!-- VERSION_REVISION=$(VersionRevision); -->
+      <!-- </PreprocessorDefinitions> -->
+    <!-- </ResourceCompile> -->
+  </ItemDefinitionGroup>
+</Project>
