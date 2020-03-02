@@ -4,7 +4,7 @@
 
 using namespace Microsoft::WRL;
 
-CoCreatableClass(WidgetFTServerFactory);
+CoCreatableClass(WidgetftComFactory);
 
 class WidgetftComFactory :
     public Microsoft::WRL::RuntimeClass<
