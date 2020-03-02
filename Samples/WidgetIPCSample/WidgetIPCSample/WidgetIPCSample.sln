@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29810.221
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WidgetIPCSample", "WidgetIPCSample\WidgetIPCSample.vcxproj", "{5F191098-DAA7-48D7-A153-41FC20B57464}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WidgetFTServer", "WidgetFT\WidgetFT.vcxproj", "{EF06BEF0-1AC2-4629-96E8-03D3A2990389}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WidgetFTServer", "WidgetFTServer\WidgetFTServer.vcxproj", "{EF06BEF0-1AC2-4629-96E8-03D3A2990389}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
