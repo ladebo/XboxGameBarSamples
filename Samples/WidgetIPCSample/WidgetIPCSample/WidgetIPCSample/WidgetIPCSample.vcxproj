@@ -114,7 +114,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-	<Reference Include="WidgeFTServer">
+    <Reference Include="WidgeFTServer">
       <HintPath>C:\Users\alburt\repos\gamebar_github\XboxGameBarSamples\Samples\WidgetIPCSample\WidgetIPCSample\External\WidgetFTServer\Debug\x64\WidgetFTServer.winmd</HintPath>
       <IsWinMDFile>true</IsWinMDFile>
     </Reference>
@@ -127,6 +127,7 @@
     <ClInclude Include="MainPage.h">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="WidgetftFactoryCreate.h" />
     <ClInclude Include="WidgetIPC.h">
       <DependentUpon>WidgetIPC.xaml</DependentUpon>
     </ClInclude>
@@ -164,6 +165,7 @@
     <ClCompile Include="MainPage.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="WidgetftFactoryCreate.cpp" />
     <ClCompile Include="WidgetIPC.cpp">
       <DependentUpon>WidgetIPC.xaml</DependentUpon>
     </ClCompile>

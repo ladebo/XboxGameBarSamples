@@ -18,10 +18,12 @@
     <ClCompile Include="MainPage.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="WidgetIPC.cpp" />
+    <ClCompile Include="WidgetftFactoryCreate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="WidgetIPC.h" />
+    <ClInclude Include="WidgetftFactoryCreate.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">

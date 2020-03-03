@@ -6,7 +6,7 @@
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
     <MinimalCoreWin>true</MinimalCoreWin>
-	<PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
     <ProjectGuid>{ef06bef0-1ac2-4629-96e8-03d3a2990389}</ProjectGuid>
     <ProjectName>WidgetFTServer</ProjectName>
     <RootNamespace>WidgetFTServer</RootNamespace>
@@ -14,30 +14,20 @@
     <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.19041.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.17134.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
-   <PropertyGroup>
-
+  <PropertyGroup>
     <!-- Source related dirs -->
     <WidgetFTServerBuildDirectory>$(MSBuildThisFileDirectory)Build\</WidgetFTServerBuildDirectory>
-
     <!-- Output related dirs -->
-
     <!-- This tells Package ES we will control the output dirs ourselves -->
     <SetOwnOutputDirectories>true</SetOwnOutputDirectories>
-
-    
-
     <!-- Provide consistency by using a GbPlatform variable instead of Platform to ensure Win32 is x86 -->
     <WidgetFTServerPlatform>$(Platform)</WidgetFTServerPlatform>
     <WidgetFTServerPlatform Condition="'$(Platform)' == 'Win32'">x86</WidgetFTServerPlatform>
-
     <!-- Standard MSBuild output dirs -->
     <OutDir>$(Configuration)\$(WidgetFTServerPlatform)\</OutDir>
     <OutputPath>$(OutDir)$(MSBuildProjectName)\</OutputPath>
-
     <!-- Capture OutDir before it's modified by common targets to add project name (see below) -->
     <ProjectIndependentOutDir>$(OutDir)</ProjectIndependentOutDir>
-   
-
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -98,22 +88,22 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level4</WarningLevel>
-	  <LanguageStandard>stdcpp17</LanguageStandard>
-	  <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <AdditionalOptions>/await /bigobj /Qspectre %(AdditionalOptions)</AdditionalOptions>
       <!--Temporarily disable cppwinrt heap enforcement to work around xaml compiler generated std::shared_ptr use -->
       <AdditionalOptions Condition="'$(CppWinRTHeapEnforcement)'==''">/DWINRT_NO_MAKE_DETECTION %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
       <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-	  <AdditionalIncludeDirectories>$(WindowsSdkDir_10)Windows Performance Toolkit;$(GeneratedFilesDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WindowsSdkDir_10)Windows Performance Toolkit;$(GeneratedFilesDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-	  <SubSystem>Windows</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>shell32.lib;tdh.lib;shlwapi.lib;advapi32.lib;%(AdditionalDependencies);</AdditionalDependencies>
     </Link>
-	<PostBuildEvent>
+    <PostBuildEvent>
       <Command>xcopy /y $(OutDir)$(ProjectName).exe $(SolutionDir)External\$(ProjectName)\$(Configuration)\$(Platform)\*
 xcopy /y $(OutDir)WidgetFTServer.winmd $(SolutionDir)External\$(ProjectName)\$(Configuration)\$(Platform)\*
       </Command>
@@ -131,7 +121,7 @@ xcopy /y $(OutDir)WidgetFTServer.winmd $(SolutionDir)External\$(ProjectName)\$(C
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
-	  <Optimization>MaxSpeed</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <ControlFlowGuard>Guard</ControlFlowGuard>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -144,7 +134,7 @@ xcopy /y $(OutDir)WidgetFTServer.winmd $(SolutionDir)External\$(ProjectName)\$(C
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-	<ClInclude Include="WidgetftComFactory.h" />
+    <ClInclude Include="WidgetftComFactory.h" />
     <ClInclude Include="WidgetFTServer.WidgetftFactory.h" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +156,7 @@ xcopy /y $(OutDir)WidgetFTServer.winmd $(SolutionDir)External\$(ProjectName)\$(C
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="WidgetftComFactory.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="WidgetFTServer.WidgetftFactory.cpp" />
   </ItemGroup>

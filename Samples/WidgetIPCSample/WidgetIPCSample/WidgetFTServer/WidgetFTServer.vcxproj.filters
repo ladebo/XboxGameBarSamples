@@ -1,26 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="MainPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="App.idl" />
-    <Midl Include="MainPage.idl" />
-    <Midl Include="WidgetFT.WidgetftFactory.idl" />
+    <Midl Include="WidgetFTServer.WidgetftFactory.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="MainPage.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="WidgetFT.WidgetftFactory.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="WidgetFTServer.WidgetftFactory.cpp" />
+    <ClCompile Include="WidgetftComFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="WidgetFT.WidgetftFactory.h" />
+    <ClInclude Include="WidgetftComFactory.h" />
+    <ClInclude Include="WidgetFTServer.WidgetftFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
@@ -56,8 +49,5 @@
   <ItemGroup>
     <None Include="PropertySheet.props" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme.txt" />
   </ItemGroup>
 </Project>
