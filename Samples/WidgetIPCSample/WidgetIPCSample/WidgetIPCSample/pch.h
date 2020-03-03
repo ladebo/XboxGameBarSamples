@@ -18,6 +18,15 @@
 #undef GetUserName
 #endif
 
+
+#include <activation.h>
+
+//#include <wil\result_macros.h>
+//#include <wil\cppwinrt.h>
+//#include <wil\com.h>
+//#include <wil\resource.h>
+//#include <wil\result.h>
+
 #include <unknwn.h>
 #include <restrictederrorinfo.h>
 #include <hstring.h>

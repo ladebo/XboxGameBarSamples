@@ -20,4 +20,9 @@ namespace winrt::WidgetFTServer::implementation
             modulePtr->DecrementObjectCount();
         }
     }
+
+    void WidgetftFactory::Test()
+    {
+        OutputDebugString(L"Hello this is  workinngggggg");
+    }
 }

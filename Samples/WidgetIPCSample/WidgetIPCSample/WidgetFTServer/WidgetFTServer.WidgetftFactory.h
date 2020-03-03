@@ -7,5 +7,6 @@ namespace winrt::WidgetFTServer::implementation
     {
         WidgetftFactory();
         virtual ~WidgetftFactory();
+        void Test();
     };
 }

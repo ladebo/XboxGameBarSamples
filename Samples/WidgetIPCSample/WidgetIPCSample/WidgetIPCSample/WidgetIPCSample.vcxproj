@@ -114,6 +114,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+	<Reference Include="WidgeFTServer">
+      <HintPath>C:\Users\alburt\repos\gamebar_github\XboxGameBarSamples\Samples\WidgetIPCSample\WidgetIPCSample\External\WidgetFTServer\Debug\x64\WidgetFTServer.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.h">
       <DependentUpon>App.xaml</DependentUpon>
