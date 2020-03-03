@@ -9,29 +9,16 @@ namespace winrt::WidgetIPCSample::implementation
     winrt::WidgetFTServer::WidgetftFactory WidgetftFactoryCreate()
     {
         winrt::com_ptr<IActivationFactory> widgetftComFactory;
-
-        try
-        {
-            CoCreateInstance(
-                __uuidof(WidgetftComFactory),
-                nullptr,
-                CLSCTX_LOCAL_SERVER,
-                __uuidof(IActivationFactory),
-                reinterpret_cast<void**>(widgetftComFactory.put_void()));
-        }
-        catch (...)
-        {
-            winrt::to_hresult();
-        }
+        winrt::check_hresult(CoCreateInstance(
+            __uuidof(WidgetftComFactory),
+            nullptr,
+            CLSCTX_LOCAL_SERVER,
+            __uuidof(IActivationFactory),
+            reinterpret_cast<void**>(widgetftComFactory.put_void())));
 
         winrt::com_ptr<::IInspectable> widgetftFactoryInsp;
-
-        auto retVal = widgetftFactoryInsp.put();
-
-        widgetftComFactory->ActivateInstance(retVal);
-        //Object^ widgetftFactoryObj = reinterpret_cast<Object^>(widgetftFactoryInsp.get());
+        widgetftComFactory->ActivateInstance(widgetftFactoryInsp.put());
         auto widgetftFactoryObj = widgetftFactoryInsp.as<winrt::WidgetFTServer::WidgetftFactory>();
-        //widgetftFactoryObj.Test();
-		return widgetftFactoryObj;
+        return widgetftFactoryObj;
     }
 }
