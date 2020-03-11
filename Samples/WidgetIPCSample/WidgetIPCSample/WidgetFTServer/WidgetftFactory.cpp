@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "WidgetFTServer.WidgetftFactory.h"
+#include "WidgetftFactory.h"
 
 namespace winrt::WidgetFTServer::implementation
 {

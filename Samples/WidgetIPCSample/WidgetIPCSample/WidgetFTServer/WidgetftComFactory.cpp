@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "WidgetFTServer.WidgetftFactory.h"
+#include "WidgetftFactory.h"
 
 using namespace Microsoft::WRL;
 
