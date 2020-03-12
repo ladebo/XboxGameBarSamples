@@ -11,4 +11,15 @@
         <TextBlock Text="WidgetIPC" Padding="0,0,0,5"/>
        <Button x:Name="myButton" Click="MyButton_Click">Click Me</Button>
     </StackPanel>
+
+  <!--<TextBox x:Name="ShortcutTextBox"
+                   x:Uid="ShortcutTextBox"
+                   Height="32"
+                   MinWidth="150"
+                   VerticalAlignment="Top"
+                   AcceptsReturn="False"
+                   AutomationProperties.LabeledBy="{Binding ElementName=ShortcutLabel}"
+                   BorderBrush="{ThemeResource TextBoxBorderBrush}"
+                   BorderThickness="1"
+                    />-->
 </Page>

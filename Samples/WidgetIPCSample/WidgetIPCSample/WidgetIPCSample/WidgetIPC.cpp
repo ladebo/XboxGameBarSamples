@@ -27,9 +27,9 @@ namespace winrt::WidgetIPCSample::implementation
 
     void WidgetIPC::MyButton_Click(IInspectable const&, RoutedEventArgs const&)
     {
-        myButton().Content(box_value(L"Clicked"));
+        //myButton().Content(box_value(L"Clicked"));
 
-        auto widgetFactObj = WidgetftFactoryCreate();
-        widgetFactObj.Test();
+        /*auto widgetFactObj = WidgetftFactoryCreate();
+        widgetFactObj.Test();*/
     }
 }
