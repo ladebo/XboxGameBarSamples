@@ -73,7 +73,7 @@ void App::OnActivated(IActivatedEventArgs const& e)
 
             // Navigate to correct view
 
-            if (0 == appExtId.compare(L"Widget1"))
+            if (0 == appExtId.compare(L"WidgetIPC"))
             {
                 m_widget1 = XboxGameBarWidget(
                     widgetArgs,
