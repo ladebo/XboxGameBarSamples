@@ -12,7 +12,7 @@
     Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="e6d302d2-df36-4611-9bbd-1045451b4f45" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
   <Properties>
-    <DisplayName>WidgetIPCSample</DisplayName>
+    <DisplayName>WidgetIPCSample</DisplayName> 
     <PublisherDisplayName>alburt</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -38,9 +38,10 @@
                              Description="WidgetIPCSample Description"
                              PublicFolder="GameBar">
             <uap3:Properties>
-              <GameBarUIExtension Type="Standard">
+              <GameBarWidget Type="Standard">
                 <HomeMenuVisible>true</HomeMenuVisible>
                 <PinningSupported>true</PinningSupported>
+                <ActivateAfterInstall>true</ActivateAfterInstall>
                 <Window>
                   <Size>
                     <Height>300</Height>
@@ -55,7 +56,7 @@
                     <Vertical>true</Vertical>
                   </ResizeSupported>
                 </Window>
-              </GameBarUIExtension>
+              </GameBarWidget>
             </uap3:Properties>
           </uap3:AppExtension>
         </uap3:Extension>
@@ -64,8 +65,8 @@
             <!-- 0x11 = (COM_RIGHTS_EXECUTE | COM_RIGHTS_EXECUTE_LOCAL | COM_RIGHTS_ACTIVATE_LOCAL) -->
             <!-- O:PSG:BU   Owner: principal self, Group: Built-in users -->
             <!-- (A;;0x11;;;WD)  Allow SDDL_EVERYONE -->
-            <!-- S-1-15-2-1714399563-1326177402-2048222277-143663168-2151391019-765408921-4098702777 is this package (Microsoft.XboxGamingOverlay) SID -->
-            <com:ExeServer Executable="WidgetFTServer.exe" LaunchAndActivationPermission="O:PSG:BUD:(A;;11;;;WD)(A;;11;;;S-1-15-2-1714399563-1326177402-2048222277-143663168-2151391019-765408921-4098702777)S:(ML;;NX;;;LW)">
+            <!-- S-1-15-2-1714399563-1326177402-2048222277-143663168-2151391019-765408921-4098702777 is this package (WidgetIPC) SID -->
+            <com:ExeServer Executable="WidgetFTServer.exe" LaunchAndActivationPermission="O:PSG:BUD:(A;;11;;;WD)(A;;11;;;S-1-15-2-4028404679-3178261574-3795030958-2183307115-4290976547-500102433-721774397)S:(ML;;NX;;;LW)">
               <com:Class Id="F332E6F3-C8EA-4C3F-A5DA-B3EE4093D0BD" DisplayName="WidgetftComFactory"/>
             </com:ExeServer>
           </com:ComServer>
@@ -74,18 +75,18 @@
     </Application>
   </Applications>
   <Extensions>
-    
     <!-- Enlighten COM on where to find Metadata Based Marshaling (MBM) data for the Game Bar private types 
-       <Path> is a required element (by VS) and has to point to a binary in the package, but it's not used when the class id is
-       00000355-0000-0000-C000-000000000046 (MBM). Due to that we just put the Microsoft.Gaming.XboxGameBar.winmd here. -->
+         <Path> is a required element (by VS) and has to point to a binary in the package, but it's not used when the class id is
+         00000355-0000-0000-C000-000000000046 (MBM). Due to that we just put the Microsoft.Gaming.XboxGameBar.winmd here. -->
     <Extension Category="windows.activatableClass.proxyStub">
       <ProxyStub ClassId="00000355-0000-0000-C000-000000000046">
         <Path>Microsoft.Gaming.XboxGameBar.winmd</Path>
-        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarExtensionControlHost" InterfaceId="C309CAC7-8435-4082-8F37-784523747047" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetAuthHost" InterfaceId="DC263529-B12F-469E-BB35-B94069F5B15A" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetControlHost" InterfaceId="C309CAC7-8435-4082-8F37-784523747047" />
         <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarNavigationKeyCombo" InterfaceId="5EEA3DBF-09BB-42A5-B491-CF561E33C172" />
-        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarUIExtensionActivatedEventArgsPrivate" InterfaceId="782535A7-9407-4572-BFCB-316B4086F102" />
-        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarUIExtensionHost" InterfaceId="5D12BC93-212B-4B9F-9091-76B73BF56525" />
-        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarUIExtensionPrivate" InterfaceId="22ABA97F-FB0F-4439-9BDD-2C67B2D5AA8F" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetActivatedEventArgsPrivate" InterfaceId="782535A7-9407-4572-BFCB-316B4086F102" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetHost" InterfaceId="5D12BC93-212B-4B9F-9091-76B73BF56525" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetPrivate" InterfaceId="22ABA97F-FB0F-4439-9BDD-2C67B2D5AA8F" />
       </ProxyStub>
     </Extension>
   </Extensions>

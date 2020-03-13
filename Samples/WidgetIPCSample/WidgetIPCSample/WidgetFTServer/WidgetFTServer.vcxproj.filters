@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Midl Include="WidgetFTServer.WidgetftFactory.idl" />
+    <Midl Include="WidgetftFactory.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="WidgetFTServer.WidgetftFactory.cpp" />
     <ClCompile Include="WidgetftComFactory.cpp" />
+    <ClCompile Include="WidgetftFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="WidgetftComFactory.h" />
-    <ClInclude Include="WidgetFTServer.WidgetftFactory.h" />
+    <ClInclude Include="WidgetftFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">

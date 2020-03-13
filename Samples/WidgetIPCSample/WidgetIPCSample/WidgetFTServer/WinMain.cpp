@@ -8,7 +8,7 @@ using namespace Microsoft::WRL;
 // O:PSG:BU   Owner : principal self, Group : Built - in users
 // (A;;0x11;;;WD)  Allow SDDL_EVERYONE
 // S-1-15-2-1714399563-1326177402-2048222277-143663168-2151391019-765408921-4098702777 is this package (Microsoft.XboxGamingOverlay) SID
-const wchar_t* const c_ComSecurityDescriptor = L"O:PSG:BUD:(A;;11;;;WD)(A;;11;;;S-1-15-2-1714399563-1326177402-2048222277-143663168-2151391019-765408921-4098702777)S:(ML;;NX;;;LW)";
+const wchar_t* const c_ComSecurityDescriptor = L"O:PSG:BUD:(A;;11;;;WD)(A;;11;;;S-1-15-2-4028404679-3178261574-3795030958-2183307115-4290976547-500102433-721774397)S:(ML;;NX;;;LW)";
 
 HRESULT InitializeComSecurity()
 {
