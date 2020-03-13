@@ -26,49 +26,78 @@ App::App()
 
 #if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
     UnhandledException([this](IInspectable const&, UnhandledExceptionEventArgs const& e)
-    {
-        if (IsDebuggerPresent())
         {
-            auto errorMessage = e.Message();
-            __debugbreak();
-        }
-    });
+            if (IsDebuggerPresent())
+            {
+                auto errorMessage = e.Message();
+                __debugbreak();
+            }
+        });
 #endif
 }
 
 void App::OnActivated(IActivatedEventArgs const& e)
 {
-    XboxGameBarUIExtensionActivatedEventArgs uiExtArgs{ nullptr };
+    XboxGameBarWidgetActivatedEventArgs widgetArgs{ nullptr };
     if (e.Kind() == ActivationKind::Protocol)
     {
         auto protocolArgs = e.try_as<IProtocolActivatedEventArgs>();
         if (protocolArgs)
         {
+            // If scheme name is ms-gamebarwidget, Xbox Game Bar is activating us.
             const wchar_t* scheme = protocolArgs.Uri().SchemeName().c_str();
-            if (0 != wcsstr(scheme, L"ms-gamebaruiextension"))
+            if (0 != wcsstr(scheme, L"ms-gamebarwidget"))
             {
-                uiExtArgs = e.try_as<XboxGameBarUIExtensionActivatedEventArgs>();
+                widgetArgs = e.try_as<XboxGameBarWidgetActivatedEventArgs>();
             }
         }
     }
-    if (uiExtArgs)
+    if (widgetArgs)
     {
-        // Create root frame and set it as the window content
-        auto rootFrame = Frame();
-        rootFrame.NavigationFailed({ this, &App::OnNavigationFailed });
-        Window::Current().Content(rootFrame);
+        std::wstring appExtId{ widgetArgs.AppExtensionId() };
 
-        // Create Game Bar extension object which bootstraps the connection with Game Bar
-        m_uiExtension1 = XboxGameBarUIExtension(
-            uiExtArgs,
-            Window::Current().CoreWindow(),
-            rootFrame);
+        //
+        // If IsLaunchActivation is true, this is Game Bar's initial activation of us 
+        // and we MUST create and hold onto XboxGameBarWidget.
+        //
+        // Otherwise this is a subsequent activation coming from Game Bar. We should
+        // continue to hold the XboxGameBarWidget created during initial activation
+        // and just observe the URI command here and act accordingly. It is ok to
+        // perform a navigate on the root frame to switch views/pages if needed.
+        //
+        if (widgetArgs.IsLaunchActivation())
+        {
+            auto rootFrame = Frame();
+            rootFrame.NavigationFailed({ this, &App::OnNavigationFailed });
+            Window::Current().Content(rootFrame);
 
-        // Navigate to our desired view: Extension1 page. 
-        rootFrame.Navigate(xaml_typename<WidgetIPCSample::WidgetIPC>());
+            // Navigate to correct view
 
-        // Activate our window
-        Window::Current().Activate();
+            if (0 == appExtId.compare(L"Widget1"))
+            {
+                m_widget1 = XboxGameBarWidget(
+                    widgetArgs,
+                    Window::Current().CoreWindow(),
+                    rootFrame);
+                rootFrame.Navigate(xaml_typename<WidgetIPCSample::WidgetIPC>(), m_widget1);
+            }
+            //TODO: add WidgetIPCSettings
+           /* else if (0 == appExtId.compare(L"Widget1Settings"))
+            {
+                m_widget1Settings = XboxGameBarWidget(
+                    widgetArgs,
+                    Window::Current().CoreWindow(),
+                    rootFrame);
+                rootFrame.Navigate(xaml_typename<WidgetIPCSample::WidgetIPCSampleSettings>());
+            }*/
+            else
+            {
+                // Unknown - Game Bar should never send you an unknown App Extension Id
+                return;
+            }
+
+            Window::Current().Activate();
+        }
     }
 }
 

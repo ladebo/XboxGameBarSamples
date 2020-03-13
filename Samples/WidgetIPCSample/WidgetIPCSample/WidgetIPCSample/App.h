@@ -15,6 +15,8 @@ namespace winrt::WidgetIPCSample::implementation
 
     private:
 
-        Microsoft::Gaming::XboxGameBar::XboxGameBarUIExtension m_uiExtension1{ nullptr };
+        Microsoft::Gaming::XboxGameBar::XboxGameBarWidget m_widget1{ nullptr };
+        Microsoft::Gaming::XboxGameBar::XboxGameBarWidget m_widget1Settings{ nullptr };
+        Microsoft::Gaming::XboxGameBar::XboxGameBarWidget m_widget2{ nullptr };
     };
 }
