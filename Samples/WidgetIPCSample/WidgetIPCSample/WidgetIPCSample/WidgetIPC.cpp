@@ -29,7 +29,7 @@ namespace winrt::WidgetIPCSample::implementation
     {
         //myButton().Content(box_value(L"Clicked"));
 
-        /*auto widgetFactObj = WidgetftFactoryCreate();
-        widgetFactObj.Test();*/
+        auto widgetFactObj = WidgetftFactoryCreate();
+        widgetFactObj.Test();
     }
 }

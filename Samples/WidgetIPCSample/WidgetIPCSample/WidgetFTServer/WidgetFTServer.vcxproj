@@ -24,7 +24,7 @@
     <WidgetFTServerPlatform>$(Platform)</WidgetFTServerPlatform>
     <WidgetFTServerPlatform Condition="'$(Platform)' == 'Win32'">x86</WidgetFTServerPlatform>
     <!-- Standard MSBuild output dirs -->
-    <OutDir>$(Configuration)\$(WidgetFTServerPlatform)\</OutDir>
+    <OutDir>$(MSBuildProjectDirectory)\$(Configuration)\$(WidgetFTServerPlatform)\</OutDir>
     <OutputPath>$(OutDir)$(MSBuildProjectName)\</OutputPath>
     <!-- Capture OutDir before it's modified by common targets to add project name (see below) -->
     <ProjectIndependentOutDir>$(OutDir)</ProjectIndependentOutDir>
