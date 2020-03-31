@@ -59,6 +59,7 @@
   <ItemGroup>
     <None Include="PropertySheet.props" />
     <None Include="packages.config" />
+    <None Include="$(SolutionDir)\WidgetFTServer\$(Configuration)\$(Platform)\WidgetFTServer.exe" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
